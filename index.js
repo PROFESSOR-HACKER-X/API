@@ -1,21 +1,35 @@
 const express = require('express');
-const axios = require('axios');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Ab aap direct "/" par number bhej sakte hain
-app.get('/', async (req, res) => {
-    const { number } = req.query;
-
-    if (!number) {
-        return res.send("Welcome! Please use ?number=YOUR_NUMBER at the end of URL.");
+// Fake Database (Aap ise MongoDB ya JSON file se replace kar sakte hain)
+const userData = {
+    "03018787786": {
+        "name": "Ammar Kharal",
+        "cnic": "35202-xxxxxxx-x",
+        "address": "Lahore, Pakistan",
+        "operator": "Jazz"
     }
+};
 
-    try {
-        const response = await axios.get(`https://fam-official.serv00.net/api/database.php?number=${number}`);
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: "Source API is not responding" });
+// API Endpoint
+app.get('/:number', (req, res) => {
+    const phoneNumber = req.params.number;
+    const info = userData[phoneNumber];
+
+    if (info) {
+        res.status(200).json({
+            status: "success",
+            data: info
+        });
+    } else {
+        res.status(404).json({
+            status: "error",
+            message: "Number not found"
+        });
     }
 });
 
-module.exports = app;
+app.listen(PORT, () => {
+    console.log(`API is running on port ${PORT}`);
+});
