@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Fake Database (Aap ise MongoDB ya JSON file se replace kar sakte hain)
+// Fake Database
 const userData = {
     "03018787786": {
         "name": "Ammar Kharal",
@@ -11,6 +10,11 @@ const userData = {
         "operator": "Jazz"
     }
 };
+
+// Root route (check karne ke liye ke API chal rahi hai)
+app.get('/', (req, res) => {
+    res.send("SIM Database API is live!");
+});
 
 // API Endpoint
 app.get('/:number', (req, res) => {
@@ -30,6 +34,5 @@ app.get('/:number', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`API is running on port ${PORT}`);
-});
+// Vercel ke liye zaroori hai
+module.exports = app;
